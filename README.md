@@ -5,19 +5,19 @@
 [![Package build](https://github.com/Swif7ify/Repo-Bouncer/actions/workflows/package.yml/badge.svg)](https://github.com/Swif7ify/Repo-Bouncer/actions/workflows/package.yml)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Repo Bouncer is a local, read-only checkpoint for coding-agent prompts. Before an agent starts, it checks whether the request is clear enough to proceed, whether the repository has evidence worth inspecting, or whether an important decision should be asked first.
+Repo Bouncer is a local, repo-aware briefing step for coding-agent requests. It checks for project context, routes reported failures toward investigation, and helps an agent ask about subjective decisions—such as the direction of an open-ended UI redesign—before editing. The agent can inspect the project first, offer concrete options, or take responsibility with a “Use your judgment” choice.
 
-It is an early prototype with a Python CLI and prompt-submit adapters for **Codex** and **Claude Code**, plus setup packs for **Cursor**, **VS Code**, and **Antigravity**. Every integration uses the same heuristic advisor and bounded repository scanner. It makes no model/API calls and does not intentionally write project files.
+It is an early prototype with a Python CLI and prompt-submit adapters for **Codex** and **Claude Code**, plus setup packs for **Cursor**, **VS Code**, and **Antigravity**. Every integration uses the same heuristic advisor and bounded repository scanner; the coding agent uses its own model to inspect context and conduct the brief. Repo Bouncer itself makes no model/API calls and does not intentionally write project files.
 
 ## What it does
 
 For each prompt it returns one of three recommendations:
 
 - **Proceed** when the request looks clear enough to start.
-- **Inspect** when the repository may already contain useful context.
-- **Ask** when an important choice is missing, with suggested answers and an “Other / custom” option.
+- **Inspect** when the repository may clarify the request. For open-ended design work, the result can include an interactive brief for the agent to ask after inspecting the current UI.
+- **Ask** when a consequential choice needs an answer before any safe first step, with suggested choices and room for a custom response.
 
-The advisor does not generate or install `AGENTS.md`, `CLAUDE.md`, or other project rules. It may suggest a short instruction file if none is present, but the suggestion is optional. Codex and similar prompt hooks display ask choices as numbered text; Antigravity can use its native single-select question UI. See the [product overview](docs/OVERVIEW.md) for the intended role and current limits.
+For subjective design requests, the agent is instructed to inspect the relevant UI first, ask one focused question with repo-informed options, and keep “Use your judgment” as the final choice. Clear bug reports are routed to investigation without a generic prompt interview. Codex and similar hooks pass numbered-text guidance; Antigravity can use its native question UI. See the [product overview](docs/OVERVIEW.md) for host limits and current behavior.
 
 ## Try the CLI
 
@@ -39,7 +39,7 @@ The CLI is useful on its own and provides a stable JSON result for additional ad
 
 **Codex in the ChatGPT desktop app** uses the same local Codex plugin. Install it separately from the **Plugins Directory** after adding the marketplace, review and trust its hook, then use a new local coding session with the target repository open. A regular ChatGPT conversation does not automatically run against a local repository. Read [integration setup](docs/INTEGRATIONS.md) for host-specific steps, a safe smoke test, and limitations. Read [security and data handling](docs/SECURITY.md) before enabling prompt hooks in a project.
 
-An optional, opinionated [personal engineering profile](profiles/personal/) is available to copy into a project that supports `AGENTS.md`. It includes your defaults for TypeScript, modularity, backend documentation and tests, linting, and commit-message drafts. Review it before sharing it with a team.
+An optional, opinionated [personal engineering profile](profiles/personal/) is available as persistent `AGENTS.md` instructions and a portable `engineering-defaults` Agent Skill. It includes your defaults for framework/dependency documentation research, TypeScript, modularity, backend OpenAPI and tests, database docs, linting, and commit-message drafts. It is opt-in and separate from Repo Bouncer's public prompt-routing rules; review it before sharing it with a team.
 
 ## Project documentation
 
@@ -59,4 +59,4 @@ See the [GitHub contributors page](https://github.com/Swif7ify/Repo-Bouncer/grap
 
 ## Current status
 
-This is an early prototype, not a mature prompt-understanding system or an industry standard. Routing is based on explainable patterns and repository evidence; review its decisions before relying on blocking behavior. The scan is bounded and may miss useful files. The CLI can be used by any agent that can run a local command, but automatic prompt-submit support requires a host-specific adapter.
+This is an early prototype, not a mature prompt-understanding system or an industry standard. Routing is based on explainable patterns and repository evidence; an agent must follow its instructions to inspect and ask well. Review its decisions before relying on blocking behavior. The scan is bounded and may miss useful files. The CLI can be used by any agent that can run a local command, but automatic prompt-submit support requires a host-specific adapter.

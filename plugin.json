@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "repo-bouncer",
-  "version": "0.1.1",
-  "description": "A local repo-aware prompt bouncer that helps Codex proceed, inspect, or ask before coding.",
+  "version": "0.2.0",
+  "description": "A repo-aware prompt briefing helper that guides coding agents to inspect, clarify, or use their judgment before coding.",
   "extensions": {
     "com.openai": {
       "hooks": "./hooks/codex_hooks.json"

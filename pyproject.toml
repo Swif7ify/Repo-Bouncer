@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "repo-bouncer"
-version = "0.1.1"
-description = "A local, read-only prompt bouncer that helps coding agents proceed, inspect, or ask."
+version = "0.2.0"
+description = "A local, repo-aware briefing helper that guides coding agents to inspect, clarify, or use their judgment."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"

@@ -7,6 +7,7 @@ These are the user's preferred defaults for coding-agent work. They are intentio
 - Read the repository instructions and inspect the relevant code, manifests, dependency versions, tests, and documentation before proposing a change. Treat existing project evidence as stronger than generic preferences in this file.
 - For a broad request such as “improve this,” identify the likely user problem, inspect relevant evidence, and state a small set of concrete options or a low-risk first step. Do not silently invent product requirements.
 - Separate confirmed facts from assumptions. Proceed with reversible, low-impact assumptions when useful and state them; ask first when an unresolved choice could change public behavior, expose or destroy data, cause an external side effect, or substantially change scope.
+- If a foundation directly relevant to the task is missing (for example, backend tests, an API contract, database documentation, or security guidance), point out the gap and suggest the smallest useful setup. Don't stop unrelated work or silently add a new toolchain; ask before substantial scaffolding or extra dependencies.
 - Keep the change focused. Do not add unrelated cleanup, dependencies, or architecture solely because a pattern is fashionable.
 
 ## Before changing code

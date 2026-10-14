@@ -53,11 +53,17 @@ def main() -> int:
             evidence_lines.append(f"- {location} ({item['category']})")
 
         context_note = [
-            "Repo Bouncer recommends inspecting repository evidence before asking the user for more context.",
+            "Repo Bouncer recommends using repository evidence before editing or asking the user for more context.",
             f"Reason: {result['reason']}",
         ]
         if evidence_lines:
             context_note.append("Likely evidence:\n" + "\n".join(evidence_lines))
+        if result.get("interaction"):
+            from repo_bouncer.formatting import format_interaction
+
+            context_note.append(
+                format_interaction(result, "Repo Bouncer interactive brief:")
+            )
         context_note.append(result["agent_guidance"])
         if result.get("repo_setup_suggestion"):
             context_note.append("Optional repo setup note: " + result["repo_setup_suggestion"])

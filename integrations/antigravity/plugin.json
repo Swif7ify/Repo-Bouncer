@@ -1,5 +1,5 @@
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "repo-bouncer",
-  "description": "Run a local repository preflight before coding-agent work."
+  "description": "Inspect project context and ask one focused question before open-ended coding work."
 }
