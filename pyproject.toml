@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "repo-bouncer"
+version = "0.1.0"
+description = "A local, read-only prompt bouncer that helps coding agents proceed, inspect, or ask."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Repo Bouncer contributors" }]
+dependencies = []
+
+[project.scripts]
+repo-bouncer = "repo_bouncer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,5 @@
+{
+  "name": "repo-bouncer",
+  "version": "0.1.0",
+  "description": "A local repo-aware prompt bouncer that helps Claude Code proceed, inspect, or ask before coding."
+}

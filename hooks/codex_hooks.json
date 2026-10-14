@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/codex_user_prompt_submit.py\"",
+            "commandWindows": "py -3 \"${PLUGIN_ROOT}/hooks/codex_user_prompt_submit.py\"",
+            "statusMessage": "Checking prompt against repository context",
+            "timeout": 8,
+            "additionalContextLimit": 1200
+          }
+        ]
+      }
+    ]
+  }
+}

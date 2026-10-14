@@ -1,0 +1,18 @@
+{
+  "description": "Add bounded local repository evidence before Claude Code processes a prompt.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/claude_user_prompt_submit.py"],
+            "statusMessage": "Checking prompt against repository context",
+            "timeout": 8
+          }
+        ]
+      }
+    ]
+  }
+}
