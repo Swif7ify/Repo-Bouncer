@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .advisor import advise
+from .formatting import format_ask
 from .scanner import scan_repository
 
 
@@ -45,7 +46,7 @@ def _print_text(result: dict[str, Any]) -> None:
     print(f"Action: {result['action'].upper()}")
     print(f"Reason: {result['reason']}")
     if result.get("question"):
-        print(f"Question: {result['question']}")
+        print(format_ask(result, "Question:"))
     if result.get("evidence"):
         print("Evidence:")
         for item in result["evidence"]:

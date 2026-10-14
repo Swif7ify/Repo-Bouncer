@@ -21,6 +21,7 @@ def main() -> int:
             return 0
 
         from repo_bouncer.advisor import advise
+        from repo_bouncer.formatting import format_ask
         from repo_bouncer.scanner import scan_repository
 
         repo = Path(os.getcwd()).resolve()
@@ -29,9 +30,9 @@ def main() -> int:
             emit(
                 {
                     "continue": False,
-                    "user_message": (
-                        "Repo Bouncer asks before this request proceeds: "
-                        f"{result['question']}"
+                    "user_message": format_ask(
+                        result,
+                        "Repo Bouncer asks before this request proceeds:",
                     ),
                 }
             )

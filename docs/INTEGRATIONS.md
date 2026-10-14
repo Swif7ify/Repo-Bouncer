@@ -24,7 +24,7 @@ For an agent that uses repository instructions but has no prompt hook, install t
 | Claude Code | Claude plugin and `UserPromptSubmit` hook | Passes `inspect` context to the agent or blocks an `ask`. | Install the plugin in the Claude Code session; configure the Python interpreter. |
 | Cursor | Always-on `.mdc` rule and optional `beforeSubmitPrompt` gate | Rule runs the CLI for full `proceed` / `inspect` / `ask` handling; hook can block an `ask`. | Cursor's prompt-submit hook cannot inject the `inspect` result into model context. |
 | VS Code Local harness | Workspace instruction and optional `UserPromptSubmit` hook | Instruction runs the CLI for all three actions; Local hook can stop an `ask` and pass the question to the model. | VS Code's hook experience is Preview and the hook configuration applies to the **Local** target only. Copilot, Claude, and Codex Agent Host sessions use their provider's hook runtime. |
-| Antigravity | Workspace plugin with an always-loaded rule | Rule runs the CLI for all three actions. | The documented `PreInvocation` hook payload has no submitted prompt field; the rule asks the agent to run the CLI itself. |
+| Antigravity | Workspace plugin with an always-loaded rule | Rule runs the CLI for all three actions and can present `ask` choices with Antigravity's native question UI. | The documented `PreInvocation` hook payload has no submitted prompt field; the rule asks the agent to run the CLI itself. |
 | GitHub Copilot CLI | No dedicated adapter | The CLI can still be run manually. | A Copilot SDK callback adapter is not included. |
 
 ## Codex
@@ -33,7 +33,9 @@ The Codex plugin is configured by `plugin.json` and `hooks/codex_hooks.json`. It
 
 - lets `proceed` pass silently;
 - provides `inspect` evidence and guidance as additional context;
-- blocks `ask` with the unresolved question.
+- blocks `ask` with the unresolved question and numbered choices in the hook's text reason.
+
+Codex's prompt-submit hook supports a blocking reason, not native selectable answer buttons. Users can reply with a choice number or a custom answer. The same numbered text format is used by Claude Code, Cursor, and VS Code prompt hooks. See OpenAI's [UserPromptSubmit hook reference](https://developers.openai.com/codex/hooks/).
 
 From this repository root, add the local marketplace:
 
@@ -41,13 +43,26 @@ From this repository root, add the local marketplace:
 codex plugin marketplace add .
 ```
 
-Then open `/plugins`, select the local marketplace, and install **Repo Bouncer**. Codex asks you to review and trust plugin hooks. The hook runs Python 3.10+ locally and imports the package from the plugin directory, so a separate global CLI installation is not needed for this adapter.
+Adding the marketplace only makes the plugin available; it does **not** install it. Separately install **Repo Bouncer** from the `repo-bouncer-local` marketplace:
+
+```text
+codex plugin add repo-bouncer@repo-bouncer-local
+```
+
+Then open Codex and review/trust the plugin hook. In Codex CLI, use `/hooks` to inspect and trust non-managed hooks. The hook runs Python 3.10+ locally and imports the package from the plugin directory, so a separate global CLI installation is not needed for this adapter.
 
 ### Codex in the ChatGPT desktop app
 
-The same local plugin marketplace can be installed from the Plugins Directory in Codex in the ChatGPT desktop app. Add this repository as the local marketplace, restart the desktop app if needed, then install Repo Bouncer from the marketplace. Review and trust the local hook when prompted. The hook needs to run in a local execution context where this plugin's Python files are available.
+Use the desktop app instead of the CLI if you prefer a UI:
 
-This does not make the ordinary ChatGPT chat composer inspect a local repository. Use a local Codex/Work surface with the repository open for the checkout-aware hook. See OpenAI's [plugin packaging guide](https://developers.openai.com/plugins/build/plugins) for current local-marketplace and desktop behavior.
+1. Open the **Plugins Directory** and select the **Repo Bouncer (local)** marketplace. If it is missing, add this repository as a local marketplace and restart Codex.
+2. Open **Repo Bouncer** and select **Install**. Seeing the marketplace or plugin listing alone does not mean the plugin is installed.
+3. Review and trust the plugin's `UserPromptSubmit` hook when Codex asks. Installing/enabling the plugin does not automatically trust its hook; an untrusted hook is skipped.
+4. Start a **new local coding session** with the target repository open. A regular ChatGPT conversation does not automatically have access to a local checkout.
+
+To smoke-test without authorizing a real deployment, submit: `Deploy this app. Do not run commands or change files; only report the Repo Bouncer preflight result.` The expected result is a preflight clarification asking which environment to target, followed by numbered choices and an `Other / custom` option. `proceed` is silent, while `inspect` guidance is added to the agent's context, so neither necessarily appears as a separate user-facing message.
+
+See OpenAI's [plugin packaging guide](https://developers.openai.com/plugins/build/plugins) and [hook guide](https://developers.openai.com/codex/hooks/) for current local-marketplace, installation, and hook-trust behavior.
 
 ## Claude Code
 
@@ -96,7 +111,7 @@ The plugin under `integrations/antigravity/` contains an always-loaded Repo Boun
 2. Copy the contents of `integrations/antigravity/` into the target workspace at `.agents/plugins/repo-bouncer/`.
 3. Enable the plugin in Antigravity's Plugins Manager if prompted.
 
-The rule tells the agent to run the CLI and follow all three recommendations. Antigravity's documented `PreInvocation` hook can inject instructions, but its payload does not include the current prompt; this integration avoids reading an undocumented transcript format. See Google's [plugin](https://antigravity.google/docs/plugins) and [hook](https://antigravity.google/docs/hooks/) references.
+The rule tells the agent to run the CLI and follow all three recommendations. For `ask`, it uses Antigravity's native `ask_question` tool when available, passing Repo Bouncer's options as a single-select question with a custom-answer choice. Antigravity's documented `PreInvocation` hook can inject instructions, but its payload does not include the current prompt; this integration avoids reading an undocumented transcript format. See Google's [plugin](https://antigravity.google/docs/plugins) and [hook](https://antigravity.google/docs/hooks/) references.
 
 ## Generic agent instruction
 

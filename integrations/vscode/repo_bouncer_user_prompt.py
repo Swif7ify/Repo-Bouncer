@@ -21,6 +21,7 @@ def main() -> int:
             return 0
 
         from repo_bouncer.advisor import advise
+        from repo_bouncer.formatting import format_ask
         from repo_bouncer.scanner import scan_repository
 
         repo = Path(event.get("cwd") or os.getcwd()).resolve()
@@ -28,8 +29,8 @@ def main() -> int:
         if result["action"] == "ask":
             # Local hooks use exit code 2 to stop the operation and send stderr to the model.
             sys.stderr.write(
-                "Repo Bouncer needs one decision before proceeding: "
-                f"{result['question']}\n"
+                format_ask(result, "Repo Bouncer needs your input before proceeding:")
+                + "\n"
             )
             return 2
         emit({"continue": True})

@@ -10,7 +10,7 @@ The scan is bounded: it inventories at most 5,000 paths, considers at most 36 ca
 
 ## What can reach the agent context
 
-Hooks that support context injection may return a recommendation, a short explanation, a question, guidance, and repository-relative paths with line numbers and categories. They do not return source excerpts. The CLI JSON can include matched prompt terms. In rule-based integrations, the agent receives the CLI result through its normal terminal tool workflow.
+Hooks that support context injection may return a recommendation, a short explanation, a question with suggested choices, guidance, and repository-relative paths with line numbers and categories. They do not return source excerpts. The CLI JSON can include matched prompt terms. In rule-based integrations, the agent receives the CLI result through its normal terminal tool workflow.
 
 This tool cannot replace the host's own permissions, sandbox, or data-handling controls. If a repository contains files that should never be read by local tooling, keep them outside the scanned working tree or add appropriate exclusions before enabling the hook.
 

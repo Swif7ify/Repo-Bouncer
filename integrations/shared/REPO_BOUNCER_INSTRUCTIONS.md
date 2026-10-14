@@ -8,7 +8,7 @@ Read and follow the target repository's active instructions (for example, `AGENT
 2. Read the JSON result and follow its `action`:
    - `proceed`: work on the request and verify the smallest relevant behavior.
    - `inspect`: read the paths in `evidence` first. If repository evidence resolves the uncertainty, proceed and state any material assumption. Ask only if materially different outcomes remain.
-   - `ask`: ask the user the provided `question` before the affected action.
+   - `ask`: present the provided `question` and numbered `choices`. Use the host's native single-choice question UI when available; otherwise show the choices as text. The final choice is the custom-answer option. Wait for the user's answer before the affected action.
 3. Treat evidence paths as leads, not proof. Read files before relying on them.
 4. If the command is missing or fails, say the preflight could not run and continue using the host's normal repository workflow. Never invent a Repo Bouncer result.
 

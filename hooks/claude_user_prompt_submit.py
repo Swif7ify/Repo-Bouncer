@@ -32,10 +32,15 @@ def main() -> int:
             return 0
 
         if result["action"] == "ask":
+            from repo_bouncer.formatting import format_ask
+
             _emit(
                 {
                     "decision": "block",
-                    "reason": f"Repo Bouncer needs one decision before coding: {result['question']}",
+                    "reason": format_ask(
+                        result,
+                        "Repo Bouncer needs your input before coding:",
+                    ),
                 }
             )
             return 0

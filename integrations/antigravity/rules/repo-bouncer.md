@@ -8,6 +8,6 @@ Follow the JSON `action`:
 
 - `proceed`: work on the request and verify the smallest relevant behavior.
 - `inspect`: read the paths in `evidence` first. If repository evidence resolves the uncertainty, proceed and state any material assumption. Ask only if materially different outcomes remain.
-- `ask`: ask the user the provided `question` before the affected action.
+- `ask`: use Antigravity's native `ask_question` tool with the provided `question` and `choices` as a single-select question. The final choice is the custom-answer option. Wait for the answer before the affected action. If that tool is unavailable, show the choices as a numbered text list and let the user reply with a number or custom answer.
 
 Treat evidence paths as leads, not proof. Read files before relying on them. If the command is unavailable or fails, say the preflight could not run and continue using the normal workflow; never invent a result. This heuristic does not override explicit user instructions, repository policy, or Antigravity's safety controls.

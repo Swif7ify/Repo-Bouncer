@@ -15,9 +15,9 @@ For each prompt it returns one of three recommendations:
 
 - **Proceed** when the request looks clear enough to start.
 - **Inspect** when the repository may already contain useful context.
-- **Ask** when an important choice is missing, such as a deployment target or data-preservation expectation.
+- **Ask** when an important choice is missing, with suggested answers and an “Other / custom” option.
 
-The advisor does not generate or install `AGENTS.md`, `CLAUDE.md`, or other project rules. It may suggest a short instruction file if none is present, but the suggestion is optional. See the [product overview](docs/OVERVIEW.md) for the intended role and current limits.
+The advisor does not generate or install `AGENTS.md`, `CLAUDE.md`, or other project rules. It may suggest a short instruction file if none is present, but the suggestion is optional. Codex and similar prompt hooks display ask choices as numbered text; Antigravity can use its native single-select question UI. See the [product overview](docs/OVERVIEW.md) for the intended role and current limits.
 
 ## Try the CLI
 
@@ -33,11 +33,11 @@ The CLI is useful on its own and provides a stable JSON result for additional ad
 
 ## Use with an agent
 
-- **Codex:** add this checkout as a local plugin marketplace with `codex plugin marketplace add .`, then install **Repo Bouncer** from `/plugins`.
+- **Codex CLI:** add the local marketplace with `codex plugin marketplace add .`, then separately install the plugin with `codex plugin add repo-bouncer@repo-bouncer-local`. Review and trust its hook in Codex (`/hooks` in the CLI).
 - **Claude Code:** from the repository you want Claude to work in, start a session with `claude --plugin-dir "<path-to-this-checkout>"`. This loads the plugin for that session. The bundled hook uses `python3`; on Windows, update its interpreter in `hooks/hooks.json` to the Python 3.10+ launcher available on your PATH (for example, `py` with `-3` in `args`).
 - **Cursor, VS Code, and Antigravity:** copy the matching files from [`integrations/`](integrations/) into the project you want to use them in. These hosts need the CLI installed and use repository instructions to run its preflight. Cursor and VS Code also have optional prompt-submit ask gates.
 
-**Codex in the ChatGPT desktop app** uses the same local Codex plugin. A regular ChatGPT conversation does not automatically run against a local repository. Read [integration setup](docs/INTEGRATIONS.md) for host-specific steps and limitations. Read [security and data handling](docs/SECURITY.md) before enabling prompt hooks in a project.
+**Codex in the ChatGPT desktop app** uses the same local Codex plugin. Install it separately from the **Plugins Directory** after adding the marketplace, review and trust its hook, then use a new local coding session with the target repository open. A regular ChatGPT conversation does not automatically run against a local repository. Read [integration setup](docs/INTEGRATIONS.md) for host-specific steps, a safe smoke test, and limitations. Read [security and data handling](docs/SECURITY.md) before enabling prompt hooks in a project.
 
 An optional, opinionated [personal engineering profile](profiles/personal/) is available to copy into a project that supports `AGENTS.md`. It includes your defaults for TypeScript, modularity, backend documentation and tests, linting, and commit-message drafts. Review it before sharing it with a team.
 

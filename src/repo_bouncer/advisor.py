@@ -39,22 +39,40 @@ def advise(prompt: str, context: dict[str, Any]) -> dict[str, Any]:
     action = "proceed"
     reason = "The request appears specific enough for a low-risk first pass."
     question = None
+    choices: list[str] = []
     agent_guidance = "Proceed with the requested change and verify the smallest relevant behavior."
 
     if not clean_prompt:
         action = "ask"
         reason = "No task was provided."
         question = "What would you like changed, and what outcome should count as success?"
+        choices = [
+            "I will describe the change and how to tell it worked.",
+            "Inspect the repository and suggest a few concrete tasks; do not edit yet.",
+            "Other / custom: I will describe what I want.",
+        ]
         agent_guidance = "Wait for the user to provide a task."
     elif destructive_data and missing_safety_detail:
         action = "ask"
         reason = "The request may delete or rewrite data, but it does not state the preservation or rollback expectation."
         question = "Should existing data be preserved, and what backup or rollback expectation applies?"
+        choices = [
+            "Preserve existing data and use a non-destructive approach.",
+            "Back up first and show me the rollback plan before acting.",
+            "Change only the specific data I identify; confirm the exact scope first.",
+            "Other / custom: I will describe the preservation and rollback requirements.",
+        ]
         agent_guidance = "Do not make a destructive data change until the user answers."
     elif underspecified_deploy:
         action = "ask"
         reason = "The request mentions deployment but does not identify an environment."
         question = "Which environment should this target, and should the change stop short of deploying?"
+        choices = [
+            "Use the configured preview or staging target; stop before deploying.",
+            "Prepare a production deployment, but ask me to confirm before the final deploy action.",
+            "Inspect or prepare deployment configuration only; do not publish.",
+            "Other / custom: specify the host, environment, and how far to proceed.",
+        ]
         agent_guidance = "Do not deploy until the user identifies the target environment."
     elif vague and matches:
         action = "inspect"
@@ -64,6 +82,11 @@ def advise(prompt: str, context: dict[str, Any]) -> dict[str, Any]:
         action = "ask"
         reason = "The requested outcome is broad and the repository scan found no matching files to clarify it."
         question = "What specific outcome should change, and how will we know it worked?"
+        choices = [
+            "Inspect the repository and propose a few concrete outcomes; do not edit yet.",
+            "I will provide the intended change and success criteria.",
+            "Other / custom: I will describe the outcome I want.",
+        ]
         agent_guidance = "Wait for a concrete outcome or permission to explore and propose one before editing."
     elif matches or related:
         action = "inspect"
@@ -87,6 +110,7 @@ def advise(prompt: str, context: dict[str, Any]) -> dict[str, Any]:
         "blocking": action == "ask",
         "reason": reason,
         "question": question,
+        "choices": choices,
         "repo": context.get("repo"),
         "evidence": evidence,
         "instructions_found": instructions,
