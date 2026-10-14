@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "command": "python .cursor/hooks/repo_bouncer_before_submit.py"
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "command": "python .github/hooks/repo_bouncer_user_prompt.py",
+        "windows": "py -3 .github\\hooks\\repo_bouncer_user_prompt.py",
+        "timeout": 8
+      }
+    ]
+  }
+}

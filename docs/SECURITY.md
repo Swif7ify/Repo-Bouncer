@@ -1,6 +1,6 @@
 # Security and data handling
 
-Repo Bouncer is designed to run locally with a narrow, read-only role. The host hook receives the prompt and the current working directory, then the scanner reads a limited set of repository paths. It does not make network requests, invoke a model, execute project commands, intentionally write project files, or save a prompt history of its own. Python may create normal bytecode cache files when the package is installed in editable mode inside the scanned checkout.
+Repo Bouncer is designed to run locally with a narrow, read-only role. Direct prompt-submit hooks receive the prompt and the current working directory, then the scanner reads a limited set of repository paths. Rule-based integrations ask the agent to run the same local CLI. Repo Bouncer itself does not make network requests, invoke a model, execute project commands, intentionally write project files, or save a prompt history of its own. Python may create normal bytecode cache files when the package is installed in editable mode inside the scanned checkout.
 
 ## What the scanner reads
 
@@ -10,10 +10,10 @@ The scan is bounded: it inventories at most 5,000 paths, considers at most 36 ca
 
 ## What can reach the agent context
 
-The hook may return a recommendation, a short explanation, a question, guidance, and repository-relative paths with line numbers and categories. It does not return source excerpts. The CLI JSON can include matched prompt terms. The agent already receives the user's original prompt through its normal workflow.
+Hooks that support context injection may return a recommendation, a short explanation, a question, guidance, and repository-relative paths with line numbers and categories. They do not return source excerpts. The CLI JSON can include matched prompt terms. In rule-based integrations, the agent receives the CLI result through its normal terminal tool workflow.
 
 This tool cannot replace the host's own permissions, sandbox, or data-handling controls. If a repository contains files that should never be read by local tooling, keep them outside the scanned working tree or add appropriate exclusions before enabling the hook.
 
 ## Hook failure behavior
 
-Both adapters fail open on advisor errors: the user's prompt proceeds without preflight context if Python is missing, the repository cannot be scanned, or the adapter raises an error. Recommendations are heuristics and should not be treated as a security boundary or proof of correctness.
+All four prompt-submit adapters fail open on advisor errors: the user's prompt proceeds without preflight context if Python is missing, the repository cannot be scanned, or the adapter raises an error. Recommendations are heuristics and should not be treated as a security boundary or proof of correctness. Cursor and VS Code's optional gates can block only when Repo Bouncer successfully returns `ask`.

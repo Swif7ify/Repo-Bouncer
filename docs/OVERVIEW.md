@@ -36,13 +36,21 @@ The current rules specifically look for broad improvement requests, likely match
 - `src/repo_bouncer/scanner.py` performs bounded, read-only repository discovery and keyword matching.
 - `src/repo_bouncer/advisor.py` converts a prompt and scan result into the common JSON response.
 - `src/repo_bouncer/cli.py` provides the standalone `repo-bouncer` command.
-- `hooks/codex_user_prompt_submit.py` and `hooks/claude_user_prompt_submit.py` translate that response to each host's hook protocol.
+- `hooks/codex_user_prompt_submit.py` and `hooks/claude_user_prompt_submit.py` translate that response to each host's hook protocol. `integrations/` contains rules and optional prompt-submit ask gates for additional hosts.
 - `plugin.json` and `hooks/codex_hooks.json` package the Codex integration; `.claude-plugin/plugin.json` and `hooks/hooks.json` package the Claude Code integration.
 
-The host adapter contains no separate decision logic: both agents receive the same recommendation. If another host is added, it should map the common response to that host's prompt lifecycle without changing the advisor's policy.
+The host adapters contain no separate decision logic: every integration uses the same recommendation. Prompt-aware hosts can receive a recommendation directly at submission time. Other hosts use an always-on repository instruction that tells the agent to run the CLI as its first step. See [integration setup](INTEGRATIONS.md) for which path each host uses and the limits of each API.
+
+## Optional engineering profile
+
+`profiles/personal/AGENTS.md` is a separate, opt-in starter for persistent coding preferences: version-aware official-doc research, security checks, modularity, API/database documentation, backend tests, lint handling, and a suggested commit message in the final response. It is not part of the advisor's decision rules and is not installed automatically. Its approximately 500-line file-size target is explicitly personal, not an industry standard.
 
 ## Product boundary
 
 The advisor can identify leads in a repository; it cannot prove that a matching path is authoritative or that a line implements the intended behavior. It does not run tests, inspect Git history, call an LLM, intentionally write project files, execute project scripts, or transmit prompt/repository data. See [security and data handling](SECURITY.md) for scan limits and what is passed back to the agent.
 
 This version is a prototype. Its most important next product question is whether the recommendations are useful and low-noise across real repositories. A representative evaluation set should be built before expanding the rules or treating the hook as a policy gate.
+
+## Repository workflow
+
+The repository includes a [contribution guide](../CONTRIBUTING.md), GitHub issue and pull request templates, a [support page](../SUPPORT.md), and a [security reporting policy](../SECURITY.md). GitHub Actions builds a Python source distribution and wheel on pushes and pull requests; this packaging check is not a substitute for behavioral tests. The project does not yet define a test runner or lint/type-check commands.

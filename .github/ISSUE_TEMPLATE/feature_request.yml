@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a user problem or a new Repo Bouncer capability.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Start with the problem and who it affects. For host integrations, identify the host and link its official hook or instruction documentation when available.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this solve?
+      description: Explain the current workflow and why it is difficult or unreliable.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would a useful solution look like?
+      description: Describe the outcome. Implementation details are optional.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or tradeoffs
+      description: Mention existing workarounds, host limitations, or risks if known.
+    validations:
+      required: false
